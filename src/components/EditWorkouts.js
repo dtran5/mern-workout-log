@@ -30,7 +30,7 @@ function EditWorkouts(props) {
     fetchData();
   }, [workoutId]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedWorkout = {
       liftName: workout.liftName,
@@ -39,8 +39,7 @@ function EditWorkouts(props) {
       weight: workout.weight,
     };
 
-    console.log(updatedWorkout);
-    axios
+    await axios
       .patch(
         `http://localhost:4000/workouts/update/${workoutId}`,
         updatedWorkout

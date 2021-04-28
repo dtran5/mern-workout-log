@@ -1,4 +1,5 @@
 import React from "react";
+import "./styles/App.scss";
 import Navigation from "./components/navigation/Navigation";
 import Workouts from "./components/Workouts";
 import EditWorkouts from "./components/EditWorkouts";

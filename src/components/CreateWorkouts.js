@@ -10,7 +10,7 @@ function CreateWorkouts() {
     weight: "",
   });
 
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     console.log(workout.liftName);
@@ -25,7 +25,7 @@ function CreateWorkouts() {
       weight: workout.weight,
     };
 
-    axios
+    await axios
       .post("http://localhost:4000/workouts", newWorkout)
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err));
@@ -36,7 +36,7 @@ function CreateWorkouts() {
       reps: "",
       weight: "",
     });
-  }
+  };
 
   return (
     <>

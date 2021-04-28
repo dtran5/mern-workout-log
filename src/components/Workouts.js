@@ -34,9 +34,9 @@ function Workouts() {
   };
 
   return (
-    <Container>
+    <Container className="workouts__container">
       <h3>Workouts List</h3>
-      <Table striped bordered hover>
+      <Table className="workouts__table" striped bordered hover>
         <thead>
           <tr>
             <th>Exercise</th>
