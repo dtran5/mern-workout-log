@@ -1,8 +1,14 @@
 import React, { useState } from "react";
+// dependencies
 import axios from "axios";
+// redux
+import { useDispatch } from "react-redux";
+import { createWorkout } from "../redux/workouts/workoutsActions";
+// styling
 import { Form, Button } from "react-bootstrap";
 
 function CreateWorkouts() {
+  const dispatch = useDispatch();
   const [workout, setWorkout] = useState({
     liftName: "",
     sets: "",
@@ -13,29 +19,26 @@ function CreateWorkouts() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(workout.liftName);
-    console.log(workout.sets);
-    console.log(workout.reps);
-    console.log(workout.weight);
+    // const newWorkout = {
+    //   liftName: workout.liftName,
+    //   sets: workout.sets,
+    //   reps: workout.reps,
+    //   weight: workout.weight,
+    // };
 
-    const newWorkout = {
-      liftName: workout.liftName,
-      sets: workout.sets,
-      reps: workout.reps,
-      weight: workout.weight,
-    };
+    dispatch(createWorkout(workout));
 
-    await axios
-      .post("http://localhost:4000/workouts", newWorkout)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+    // await axios
+    //   .post("http://localhost:4000/workouts", newWorkout)
+    //   .then((res) => console.log(res.data))
+    //   .catch((err) => console.log(err));
 
-    setWorkout({
-      liftName: "",
-      sets: "",
-      reps: "",
-      weight: "",
-    });
+    // setWorkout({
+    //   liftName: "",
+    //   sets: "",
+    //   reps: "",
+    //   weight: "",
+    // });
   };
 
   return (

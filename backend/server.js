@@ -1,7 +1,9 @@
-const dotenv = require("dotenv");
-dotenv.config();
 const express = require("express");
 const mongoose = require("mongoose");
+
+const dotenv = require("dotenv");
+dotenv.config();
+
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -24,8 +26,8 @@ mongoose
   })
   .then(() => {
     app.listen(PORT);
-    console.log("connected");
+    console.log("connected on " + PORT);
   })
   .catch((error) => {
-    console.log(error);
+    console.log(error.message);
   });
