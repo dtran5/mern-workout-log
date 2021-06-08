@@ -12,6 +12,8 @@ export const signup = (formData, history) => async (dispatch) => {
       type: SIGNUP,
       payload: data,
     });
+
+    history.push("/");
   } catch (error) {
     console.log("signup error");
   }
@@ -29,5 +31,15 @@ export const signin = (formData, history) => async (dispatch) => {
     history.push("/");
   } catch (error) {
     console.log("signin error");
+  }
+};
+
+export const logout = (history) => async (dispatch) => {
+  try {
+    dispatch({
+      type: LOGOUT,
+    });
+  } catch (error) {
+    console.log("could not logout");
   }
 };

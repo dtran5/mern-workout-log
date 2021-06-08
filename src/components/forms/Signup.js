@@ -19,22 +19,21 @@ const Signup = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [formData, setFormData] = useState(initialState);
-  const [isSignup, setIsSignup] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isSignup) {
+    if (isSignIn) {
       dispatch(signin(formData, history));
     } else {
-      console.log(formData);
       dispatch(signup(formData, history));
     }
   };
 
   const switchForms = () => {
     setFormData(initialState);
-    setIsSignup((prevIsSignup) => !prevIsSignup);
+    setIsSignIn((prevIsSignIn) => !prevIsSignIn);
   };
 
   return (
@@ -48,11 +47,11 @@ const Signup = () => {
             <Card>
               <Card.Body>
                 <h2 className="text-center mb-4">
-                  {isSignup ? "Login" : "Sign Up"}
+                  {isSignIn ? "Login" : "Sign Up"}
                 </h2>
                 {/* {error && <Alert variant="danger">{error}</Alert>} */}
                 <Form onSubmit={handleSubmit}>
-                  {isSignup ? (
+                  {isSignIn ? (
                     <>
                       <Form.Group id="email">
                         <Form.Label>Email</Form.Label>
@@ -152,14 +151,14 @@ const Signup = () => {
                     </>
                   )}
                   <Button disabled={loading} className="w-100" type="submit">
-                    Sign Up
+                    {isSignIn ? "Sign In" : "Sign Up"}
                   </Button>
                 </Form>
               </Card.Body>
             </Card>
             <div className="w-100 text-center mt-2">
               <Button onClick={switchForms}>
-                {isSignup
+                {isSignIn
                   ? "Don't have an account? Sign up"
                   : "Already have an account? Sign in "}
               </Button>
