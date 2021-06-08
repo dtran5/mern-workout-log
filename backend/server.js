@@ -1,16 +1,23 @@
-const dotenv = require("dotenv");
-dotenv.config();
+// express framework
 const express = require("express");
 const mongoose = require("mongoose");
+
+const dotenv = require("dotenv");
+dotenv.config();
+
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const PORT = 4000;
+
+// routes
+const userRoutes = require("./routes/user-routes");
 const workoutRoutes = require("./routes/workout-routes");
 
 app.use(cors());
 app.use(bodyParser.json());
 
+app.use("/user", userRoutes);
 app.use("/workouts", workoutRoutes);
 
 mongoose
@@ -24,8 +31,8 @@ mongoose
   })
   .then(() => {
     app.listen(PORT);
-    console.log("connected");
+    console.log("connected on " + PORT);
   })
   .catch((error) => {
-    console.log(error);
+    console.log(error.message);
   });

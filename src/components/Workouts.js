@@ -1,63 +1,98 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+// redux
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getWorkouts } from "../redux/workouts/workoutsActions";
+// dependencies
 import axios from "axios";
-import { Table, Container } from "react-bootstrap";
-
+// styles
+import { Table, Container, Spinner, Row, Col } from "react-bootstrap";
+// components
 import RenderWorkout from "./RenderWorkout";
 
 function Workouts() {
-  const [exercises, setExercises] = useState([]);
-  const [updatedExercises, setUpdatedExercises] = useState([]);
+  // define dispatch that allows dispatching of actions
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios("http://localhost:4000/workouts");
-      setExercises(result.data.workouts);
-      console.log(exercises);
-    };
-    fetchData();
-  }, [updatedExercises]);
+    dispatch(getWorkouts());
+  }, [dispatch]);
 
-  const handleDelete = async (workoutToBeDeleted) => {
-    await axios
-      .delete(`http://localhost:4000/workouts/${workoutToBeDeleted}`)
-      .then((response) => {
-        let updatedWorkouts = exercises.filter((exercise) => {
-          console.log("deleted");
-          return exercise.id !== workoutToBeDeleted.id;
-        });
+  // useSelector allows us to reach into global redux store
+  // parameter in useSelector gives us access to entire store
+  const workouts = useSelector((state) => state.workouts.workouts.workouts);
+  console.log(workouts);
+  // const [exercises, setExercises] = useState([]);
+  // const [updatedExercises, setUpdatedExercises] = useState([]);
 
-        setUpdatedExercises(updatedWorkouts);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await axios("http://localhost:4000/workouts");
+  //     setExercises(result.data.workouts);
+  //     console.log(exercises);
+  //   };
+  //   fetchData();
+  // }, [updatedExercises]);
 
-  return (
-    <Container className="workouts__container">
-      <h3>Workouts List</h3>
-      <Table className="workouts__table" striped bordered hover>
-        <thead>
-          <tr>
-            <th>Exercise</th>
-            <th>Sets</th>
-            <th>Reps</th>
-            <th>Weight</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {exercises.map((exercise) => (
-            <RenderWorkout
-              exercise={exercise}
-              key={exercise.id}
-              handleDelete={handleDelete}
-            />
-          ))}
-        </tbody>
-      </Table>
-    </Container>
+  // const handleDelete = (workoutToBeDeleted) => {
+  //   axios
+  //     .delete(`http://localhost:4000/workouts/${workoutToBeDeleted}`)
+  //     .then((response) => {
+  //       let updatedWorkouts = exercises.filter((exercise) => {
+  //         console.log("deleted");
+  //         return exercise.id !== workoutToBeDeleted.id;
+  //       });
+
+  //       setUpdatedExercises(updatedWorkouts);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
+  return !workouts ? (
+    <>
+      <Container>
+        <Row className="text-center mt-3">
+          <Col>
+            <Spinner animation="border" variant="success" />
+            <Spinner animation="border" variant="danger" />
+            <Spinner animation="border" variant="warning" />
+            <Spinner animation="border" variant="info" />
+          </Col>
+        </Row>
+      </Container>
+    </>
+  ) : (
+    <>
+      <Container className="workouts__container">
+        <h3>Workouts List</h3>
+        <Table className="workouts__table" striped bordered hover>
+          <thead>
+            <tr>
+              <th>Exercise</th>
+              <th>Sets</th>
+              <th>Reps</th>
+              <th>Weight</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {workouts.map((exercise) => (
+              <RenderWorkout exercise={exercise} key={exercise.id} />
+            ))}
+            {/* {exercises.map((exercise) => (
+              <RenderWorkout
+                exercise={exercise}
+                key={exercise.id}
+                handleDelete={handleDelete}
+              />
+            ))} */}
+          </tbody>
+        </Table>
+      </Container>
+    </>
   );
 }
 

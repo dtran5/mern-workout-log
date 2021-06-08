@@ -7,6 +7,7 @@ const getWorkouts = async (req, res, next) => {
   let workouts;
   try {
     workouts = await Workout.find();
+    res.status(200);
   } catch (err) {
     const error = new HttpError(
       "Could not find workouts with this userId",
@@ -40,25 +41,25 @@ const getWorkoutById = async (req, res, next) => {
   }
 
   if (!workout) {
-    //set our status if theres an error
-    //return prevents any further code from executing
+    // set our status if theres an error
+    // return prevents any further code from executing
     throw new HttpError("Could not find a workout for provided id", 404);
   }
-  //send back a reponse to our browser
-  //the object that is returned is a mongoose object so we want to convert it to a regular object
-  //then we want to get rid of the _ in _id in the properties so we set getters to true
+  // send back a reponse to our browser
+  // the object that is returned is a mongoose object so we want to convert it to a regular object
+  // then we want to get rid of the _ in _id in the properties so we set getters to true
   res.json({ workout: workout.toObject({ getters: true }) });
 };
 
 const createWorkout = async (req, res, next) => {
-  //call validationResult from express validator and pass the request to it - this function looks into the req object and see if there are any validation errors which were detected by our setup in the routes and returns us an errors object and we check if it is empty or not
+  // call validationResult from express validator and pass the request to it - this function looks into the req object and see if there are any validation errors which were detected by our setup in the routes and returns us an errors object and we check if it is empty or not
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     throw new HttpError("Invalid inputs pass, please check them again", 422);
   }
-  //we can get this body data because we parsed it in the middleware function bodyParser
-  //extracting data from the incoming request
-  const { liftName, sets, reps, weight } = req.body; //essentially const liftName = req.body.liftName
+  // we can get this body data because we parsed it in the middleware function bodyParser
+  // extracting data from the incoming request
+  const { liftName, sets, reps, weight } = req.body; // essentially const liftName = req.body.liftName
   const newWorkout = new Workout({
     liftName: liftName,
     sets: sets,

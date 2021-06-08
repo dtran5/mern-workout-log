@@ -1,39 +1,44 @@
 const express = require("express");
 const { check } = require("express-validator");
+// middleware
+const auth = require("../middleware/auth.js");
 
+// controller
 const workoutControllers = require("../controllers/workout-controller");
 
 const router = express.Router();
-//GET ALL WORKOUTS
+// GET ALL WORKOUTS
 router.get("/", workoutControllers.getWorkouts);
-//GET ONE WORKOUT BY ID
+// GET ONE WORKOUT BY ID
 router.get("/:workoutId", workoutControllers.getWorkoutById);
-//MAKE A NEW WORKOUT
+// MAKE A NEW WORKOUT
 router.post(
   "/",
-  [
-    check("liftName").trim().notEmpty(),
-    check("sets").trim().not().isEmpty().isNumeric(),
-    check("reps").trim().not().isEmpty().isNumeric(),
-    check("weight").trim().not().isEmpty().isNumeric(),
-  ],
+  auth,
+  // [
+  //   check("exerciseActivity").trim().notEmpty(),
+  //   check("exef").trim().not().isEmpty().isNumeric(),
+  //   check("reps").trim().not().isEmpty().isNumeric(),
+  //   check("weight").trim().not().isEmpty().isNumeric(),
+  // ],
   workoutControllers.createWorkout
 );
 
-//EDIT A WORKOUT BY ID
+// EDIT A WORKOUT BY ID
 router.patch(
   "/update/:workoutId",
-  [
-    check("liftName").trim().notEmpty().isLength({ min: 5 }),
-    check("sets").trim().not().isEmpty().isNumeric(),
-    check("reps").trim().not().isEmpty().isNumeric(),
-    check("weight").trim().not().isEmpty().isNumeric(),
-  ],
+  auth,
+  // [
+  //   check("liftName").trim().notEmpty().isLength({ min: 5 }),
+  //   check("sets").trim().not().isEmpty().isNumeric(),
+  //   check("reps").trim().not().isEmpty().isNumeric(),
+  //   check("weight").trim().not().isEmpty().isNumeric(),
+  // ],
   workoutControllers.updateWorkoutById
 );
-//DELETE A WORKOUT
-router.delete("/:workoutId", workoutControllers.deleteWorkoutById);
+// DELETE A WORKOUT
+router.delete("/:workoutId", auth, workoutControllers.deleteWorkoutById);
 
-//nodejs export syntax
-//this means the thing which we export in this file is this router constant
+// nodejs export syntax
+// this means the thing which we export in this file is this router constant
 module.exports = router;
