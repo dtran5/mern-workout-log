@@ -12,6 +12,7 @@ function Navigation() {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
           <NavLink to="/createWorkout">Create Workout</NavLink>
+          <NavLink to="/signup">Register</NavLink>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

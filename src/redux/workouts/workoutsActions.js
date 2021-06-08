@@ -1,7 +1,7 @@
 // action types
 import { FETCH_ALL_WORKOUTS, CREATE_WORKOUT } from "./workoutsTypes";
 // dependencies
-import axios from "axios";
+
 import * as api from "../../api/index.js";
 
 // Action creator

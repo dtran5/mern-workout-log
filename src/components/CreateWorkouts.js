@@ -5,7 +5,14 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { createWorkout } from "../redux/workouts/workoutsActions";
 // styling
-import { Form, Button } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  DropdownButton,
+  Dropdown,
+} from "react-bootstrap";
 
 function CreateWorkouts() {
   const dispatch = useDispatch();
@@ -14,7 +21,72 @@ function CreateWorkouts() {
     sets: "",
     reps: "",
     weight: "",
+    rpe: 1,
+    recommended: "",
   });
+
+  const handleRPE = (e) => {
+    e.preventDefault();
+
+    if (e.target.id === "one") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    } else if (e.target.id === "two") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    } else if (e.target.id === "three") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    } else if (e.target.id === "four") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    } else if (e.target.id === "five") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    } else if (e.target.id === "six") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    } else if (e.target.id === "seven") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    } else if (e.target.id === "eight") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    } else if (e.target.id === "nine") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    } else if (e.target.id === "ten") {
+      setWorkout({
+        ...workout,
+        rpe: parseInt(e.target.innerHTML),
+      });
+    }
+  };
+
+  const handleRecommended = (e) => {
+    setWorkout({
+      ...workout,
+      recommended: e,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +112,7 @@ function CreateWorkouts() {
     //   weight: "",
     // });
   };
-
+  console.log(workout.recommended);
   return (
     <>
       <Form onSubmit={handleSubmit} className="container mt-5 mr-5">
@@ -85,8 +157,57 @@ function CreateWorkouts() {
           />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
+        <Form.Group controlId="weight">
+          <Form.Label>How was it?</Form.Label>
+          <ButtonToolbar aria-label="Toolbar with button groups">
+            <ButtonGroup className="w-75" aria-label="First group">
+              <Button id="one" onClick={handleRPE} value={workout.rpe}>
+                1
+              </Button>{" "}
+              <Button id="two" onClick={handleRPE} value={workout.rpe}>
+                2
+              </Button>{" "}
+              <Button id="three" onClick={handleRPE} value={workout.rpe}>
+                3
+              </Button>{" "}
+              <Button id="four" onClick={handleRPE} value={workout.rpe}>
+                4
+              </Button>
+              <Button id="five" onClick={handleRPE} value={workout.rpe}>
+                5
+              </Button>
+              <Button id="six" onClick={handleRPE} value={workout.rpe}>
+                6
+              </Button>
+              <Button id="seven" onClick={handleRPE} value={workout.rpe}>
+                7
+              </Button>
+              <Button id="eight" onClick={handleRPE} value={workout.rpe}>
+                8
+              </Button>
+              <Button id="nine" onClick={handleRPE} value={workout.rpe}>
+                9
+              </Button>
+              <Button id="ten" onClick={handleRPE} value={workout.rpe}>
+                10
+              </Button>
+            </ButtonGroup>
+          </ButtonToolbar>
+        </Form.Group>
+        <DropdownButton
+          drop={"right"}
+          id="dropdown-basic-button"
+          title="Recommend to a friend?"
+          value={workout.recommended}
+          onSelect={handleRecommended}
+        >
+          <Dropdown.Item href="#/action-3">Yup</Dropdown.Item>
+          <Dropdown.Item href="#/action-2">Maybe</Dropdown.Item>
+          <Dropdown.Item href="#/action-1">Nah</Dropdown.Item>
+        </DropdownButton>
+
         <Button
-          className="allbuttons"
+          className="allbuttons mt-3"
           variant="primary"
           type="submit"
           size="sm"
