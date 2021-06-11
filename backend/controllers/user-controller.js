@@ -92,8 +92,8 @@ const signin = async (req, res, next) => {
         email: existingUser.email,
         id: existingUser._id,
       },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      process.env.JWT_SECRET
+      // { expiresIn: "1h" }
     );
 
     res.status(200).json({ result: existingUser, token });

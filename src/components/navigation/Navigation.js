@@ -10,6 +10,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { useHistory, useLocation, NavLink } from "react-router-dom";
 
 function Navigation() {
+  // location helps track logout/signin on navbar
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -34,14 +35,19 @@ function Navigation() {
   return (
     <Navbar bg="light" expand="lg">
       <Navbar.Brand>
-        <NavLink to="/">Workout Log</NavLink>
+        <NavLink to="/">Exercise Share</NavLink>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
-          <NavLink className="mx-3" to="/createWorkout">
-            Create Workout
-          </NavLink>
+          {user ? (
+            <NavLink className="mx-3" to="/createWorkout">
+              Create Workout
+            </NavLink>
+          ) : (
+            ""
+          )}
+
           <NavLink className="mx-3" to="/signup">
             Register
           </NavLink>

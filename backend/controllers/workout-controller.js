@@ -17,9 +17,8 @@ const getWorkouts = async (req, res, next) => {
   }
 
   if (!workouts || workouts.length === 0) {
-    //set our status if theres an error
-    //return prevents any further code from executing
-
+    // set our status if theres an error
+    // return prevents any further code from executing
     return next(new Error("Could not find any workouts", 404));
   }
 
@@ -59,12 +58,11 @@ const createWorkout = async (req, res, next) => {
   }
   // we can get this body data because we parsed it in the middleware function bodyParser
   // extracting data from the incoming request
-  const { liftName, sets, reps, weight } = req.body; // essentially const liftName = req.body.liftName
+  const workout = req.body; // essentially const liftName = req.body.liftName
   const newWorkout = new Workout({
-    liftName: liftName,
-    sets: sets,
-    reps: reps,
-    weight: weight,
+    ...workout,
+    creator: req.userId,
+    createdAt: new Date().toISOString(),
   });
 
   try {
@@ -85,7 +83,7 @@ const updateWorkoutById = async (req, res, next) => {
     );
   }
 
-  const { liftName, sets, reps, weight } = req.body;
+  const { trainingType, trainingDuration, comments, location, rpe } = req.body;
   const workoutId = req.params.workoutId;
 
   let workout;
@@ -99,10 +97,11 @@ const updateWorkoutById = async (req, res, next) => {
     return next(error);
   }
 
-  workout.liftName = liftName;
-  workout.sets = sets;
-  workout.reps = reps;
-  workout.weight = weight;
+  workout.trainingType = trainingType;
+  workout.trainingDuration = trainingDuration;
+  workout.comments = comments;
+  workout.location = location;
+  workout.rpe = rpe;
 
   //need to make sure the updated info is saved again in our db
   try {

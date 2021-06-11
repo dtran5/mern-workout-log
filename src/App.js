@@ -9,20 +9,42 @@ import Workouts from "./components/Workouts";
 import EditWorkouts from "./components/EditWorkouts";
 import CreateWorkouts from "./components/CreateWorkouts";
 // styles
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import "./styles/App.scss";
+import { purple } from "@material-ui/core/colors";
+import Layout from "./components/Layout";
 
-function App() {
+const theme = createMuiTheme({
+  overrides: {
+    MuiInputLabel: {
+      root: {
+        fontSize: "0.8rem",
+      },
+    },
+    MuiListItemText: {
+      root: {
+        fontSize: "0.8rem",
+      },
+    },
+  },
+});
+
+const App = () => {
   return (
-    <Router>
-      <Navigation />
-      <Switch>
-        <Route path="/" exact component={Workouts} />
-        <Route path="/signup" exact component={Signup} />
-        <Route path="/update/:workoutId" component={EditWorkouts} />
-        <Route path="/createWorkout" exact component={CreateWorkouts} />
-      </Switch>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        {/* <Navigation /> */}
+        <Layout>
+          <Switch>
+            <Route path="/" exact component={Workouts} />
+            <Route path="/signup" exact component={Signup} />
+            <Route path="/update/:workoutId" component={EditWorkouts} />
+            <Route path="/createWorkout" exact component={CreateWorkouts} />
+          </Switch>
+        </Layout>
+      </Router>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
