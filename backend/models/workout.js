@@ -2,10 +2,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const workoutSchema = new Schema({
-  liftName: { type: String, required: true },
-  sets: { type: Number, required: true },
-  reps: { type: Number, required: true },
-  weight: { type: Number, required: true },
+  trainingType: { type: String, required: true },
+  trainingDuration: { type: Number, required: true },
+  firstName: { type: String, required: false },
+  lastName: { type: String, required: false },
+  comments: { type: String, required: true },
+  location: { type: String, required: true },
+  rpe: { type: Number, required: true },
   selectedFile: { type: String, required: false },
   createdAt: {
     type: Date,

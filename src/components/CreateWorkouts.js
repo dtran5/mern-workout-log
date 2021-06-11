@@ -1,28 +1,117 @@
 import React, { useState } from "react";
 // dependencies
-import axios from "axios";
+import { useHistory } from "react-router-dom";
+import { format } from "date-fns";
 // redux
 import { useDispatch } from "react-redux";
 import { createWorkout } from "../redux/workouts/workoutsActions";
 // styling
 import {
-  Form,
+  Typography,
+  Container,
+  TextField,
+  makeStyles,
   Button,
   ButtonGroup,
-  ButtonToolbar,
-  DropdownButton,
-  Dropdown,
-} from "react-bootstrap";
+  Grid,
+} from "@material-ui/core";
+import SentimentVeryDissatisfiedOutlinedIcon from "@material-ui/icons/SentimentVeryDissatisfiedOutlined";
+import MoodIcon from "@material-ui/icons/Mood";
 
-function CreateWorkouts() {
+const useStyles = makeStyles({
+  textField: {
+    marginTop: 10,
+    marginBottom: 10,
+    marginRight: 10,
+    display: "block",
+  },
+
+  btnOne: {
+    backgroundColor: "#69b34c",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  btnTwo: {
+    backgroundColor: "#69b34c",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  btnThree: {
+    backgroundColor: "#8bc34a",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  btnFour: {
+    backgroundColor: "#8bc34a",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  btnFive: {
+    backgroundColor: "#fab733",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  btnSix: {
+    backgroundColor: "#ff8e15",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  btnSeven: {
+    backgroundColor: "#ff4e11",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  btnEight: {
+    backgroundColor: "#ff4e11",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  btnNine: {
+    backgroundColor: "#ff0d0d",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+  btnTen: {
+    backgroundColor: "#ff0d0d",
+    color: "#fafafa",
+    "&:hover": {
+      backgroundColor: "black",
+    },
+  },
+});
+
+const CreateWorkouts = () => {
+  const classes = useStyles();
+  const history = useHistory();
   const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem("profile"));
   const [workout, setWorkout] = useState({
-    liftName: "",
-    sets: "",
-    reps: "",
-    weight: "",
+    trainingType: "",
+    trainingDuration: "",
+    firstName: "",
+    lastName: "",
+    comments: "",
+    location: "",
     rpe: 1,
-    recommended: "",
+    createdAt: new Date(),
   });
 
   const handleRPE = (e) => {
@@ -81,142 +170,214 @@ function CreateWorkouts() {
     }
   };
 
-  const handleRecommended = (e) => {
-    setWorkout({
-      ...workout,
-      recommended: e,
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // const newWorkout = {
-    //   liftName: workout.liftName,
-    //   sets: workout.sets,
-    //   reps: workout.reps,
-    //   weight: workout.weight,
-    // };
-
     dispatch(createWorkout(workout));
-
-    // await axios
-    //   .post("http://localhost:4000/workouts", newWorkout)
-    //   .then((res) => console.log(res.data))
-    //   .catch((err) => console.log(err));
-
-    // setWorkout({
-    //   liftName: "",
-    //   sets: "",
-    //   reps: "",
-    //   weight: "",
-    // });
+    history.push("/");
   };
-  console.log(workout.recommended);
+
   return (
     <>
-      <Form onSubmit={handleSubmit} className="container mt-5 mr-5">
-        <Form.Group controlId="exercise">
-          <Form.Label>Exercise</Form.Label>
-          <Form.Control
-            onChange={(e) =>
-              setWorkout({ ...workout, liftName: e.target.value })
-            }
-            value={workout.liftName}
-            type="text"
-            placeholder="Exercise Name"
-          />
-          <Form.Text className="text-muted"></Form.Text>
-        </Form.Group>
-        <Form.Group controlId="sets">
-          <Form.Label>Sets</Form.Label>
-          <Form.Control
-            onChange={(e) => setWorkout({ ...workout, sets: e.target.value })}
-            value={workout.sets}
-            type="number"
-            placeholder="How many sets?"
-          />
-        </Form.Group>
-        <Form.Group controlId="reps">
-          <Form.Label>Reps</Form.Label>
-          <Form.Control
-            onChange={(e) => setWorkout({ ...workout, reps: e.target.value })}
-            value={workout.reps}
-            type="number"
-            placeholder="How many reps per set?"
-          />
-          <Form.Text className="text-muted"></Form.Text>
-        </Form.Group>
-        <Form.Group controlId="weight">
-          <Form.Label>Weight</Form.Label>
-          <Form.Control
-            onChange={(e) => setWorkout({ ...workout, weight: e.target.value })}
-            value={workout.weight}
-            type="number"
-            placeholder="Suggested starting weight"
-          />
-          <Form.Text className="text-muted"></Form.Text>
-        </Form.Group>
-        <Form.Group controlId="weight">
-          <Form.Label>How was it?</Form.Label>
-          <ButtonToolbar aria-label="Toolbar with button groups">
-            <ButtonGroup className="w-75" aria-label="First group">
-              <Button id="one" onClick={handleRPE} value={workout.rpe}>
-                1
-              </Button>{" "}
-              <Button id="two" onClick={handleRPE} value={workout.rpe}>
-                2
-              </Button>{" "}
-              <Button id="three" onClick={handleRPE} value={workout.rpe}>
-                3
-              </Button>{" "}
-              <Button id="four" onClick={handleRPE} value={workout.rpe}>
-                4
-              </Button>
-              <Button id="five" onClick={handleRPE} value={workout.rpe}>
-                5
-              </Button>
-              <Button id="six" onClick={handleRPE} value={workout.rpe}>
-                6
-              </Button>
-              <Button id="seven" onClick={handleRPE} value={workout.rpe}>
-                7
-              </Button>
-              <Button id="eight" onClick={handleRPE} value={workout.rpe}>
-                8
-              </Button>
-              <Button id="nine" onClick={handleRPE} value={workout.rpe}>
-                9
-              </Button>
-              <Button id="ten" onClick={handleRPE} value={workout.rpe}>
-                10
-              </Button>
-            </ButtonGroup>
-          </ButtonToolbar>
-        </Form.Group>
-        <DropdownButton
-          drop={"right"}
-          id="dropdown-basic-button"
-          title="Recommend to a friend?"
-          value={workout.recommended}
-          onSelect={handleRecommended}
-        >
-          <Dropdown.Item href="#/action-3">Yup</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">Maybe</Dropdown.Item>
-          <Dropdown.Item href="#/action-1">Nah</Dropdown.Item>
-        </DropdownButton>
-
-        <Button
-          className="allbuttons mt-3"
-          variant="primary"
-          type="submit"
-          size="sm"
-        >
-          Submit
-        </Button>
-      </Form>
+      <Container>
+        <Grid container direction="column">
+          <Grid zeroMinWidth xs={12} sm={12} md={6} item>
+            <Typography variant="h6" color="textSecondary">
+              Share Your Training
+            </Typography>
+          </Grid>
+          <Grid zeroMinWidth xs={12} sm={12} md={6} item>
+            <form onSubmit={handleSubmit}>
+              <Grid direction="column" container>
+                <Grid item>
+                  <TextField
+                    onChange={(e) =>
+                      setWorkout({
+                        ...workout,
+                        trainingType: e.target.value,
+                        firstName: user.result.firstName,
+                        lastName: user.result.lastName,
+                      })
+                    }
+                    size="small"
+                    value={workout.trainingType}
+                    className={classes.textField}
+                    variant="outlined"
+                    label="Training method (weights, running, swimming, etc)"
+                    color="secondary"
+                    fullWidth
+                    required
+                  />
+                  <TextField
+                    onChange={(e) =>
+                      setWorkout({
+                        ...workout,
+                        trainingDuration: e.target.value,
+                      })
+                    }
+                    value={workout.trainingDuration}
+                    className={classes.textField}
+                    variant="outlined"
+                    label="Training duration (hrs)"
+                    color="secondary"
+                    fullWidth
+                    required
+                  />
+                  <TextField
+                    onChange={(e) =>
+                      setWorkout({ ...workout, location: e.target.value })
+                    }
+                    value={workout.location}
+                    className={classes.textField}
+                    variant="outlined"
+                    label="Training location? Gym, park, home, etc."
+                    color="secondary"
+                    fullWidth
+                    required
+                  />
+                  <TextField
+                    onChange={(e) =>
+                      setWorkout({ ...workout, comments: e.target.value })
+                    }
+                    value={workout.comments}
+                    className={classes.textField}
+                    variant="outlined"
+                    label="Share your thoughts on how it went!"
+                    fullWidth
+                    required
+                    multiline
+                    rows={4}
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6" color="textSecondary">
+                    Difficulty
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <ButtonGroup variant="contained">
+                    <Button
+                      classes={{
+                        root: classes.btnOne,
+                      }}
+                      // className={classes.btnOne}
+                      startIcon={<MoodIcon />}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      1
+                    </Button>{" "}
+                    <Button
+                      classes={{
+                        root: classes.btnTwo,
+                      }}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      2
+                    </Button>{" "}
+                    <Button
+                      classes={{
+                        root: classes.btnThree,
+                      }}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      3
+                    </Button>{" "}
+                    <Button
+                      classes={{
+                        root: classes.btnFour,
+                      }}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      4
+                    </Button>
+                    <Button
+                      classes={{
+                        root: classes.btnFive,
+                      }}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      5
+                    </Button>
+                    <Button
+                      classes={{
+                        root: classes.btnSix,
+                      }}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      6
+                    </Button>
+                    <Button
+                      classes={{
+                        root: classes.btnSeven,
+                      }}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      7
+                    </Button>
+                    <Button
+                      classes={{
+                        root: classes.btnEight,
+                      }}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      8
+                    </Button>
+                    <Button
+                      classes={{
+                        root: classes.btnNine,
+                      }}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      9
+                    </Button>
+                    <Button
+                      classes={{
+                        root: classes.btnTen,
+                      }}
+                      startIcon={<SentimentVeryDissatisfiedOutlinedIcon />}
+                      onClick={handleRPE}
+                      value={workout.rpe}
+                    >
+                      10
+                    </Button>
+                  </ButtonGroup>
+                </Grid>
+                <Grid item>
+                  <Button
+                    className={classes.textField}
+                    color="secondary"
+                    type="submit"
+                    variant="contained"
+                  >
+                    Share!
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </Grid>
+          {/* <Form onSubmit={handleSubmit} className="Grid mt-5 mr-5">
+            <Button
+              className="allbuttons mt-3"
+              variant="primary"
+              type="submit"
+              size="sm"
+            >
+              Submit
+            </Button>
+          </Form> */}
+        </Grid>
+      </Container>
     </>
   );
-}
+};
 
 export default CreateWorkouts;

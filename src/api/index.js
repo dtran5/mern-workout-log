@@ -1,12 +1,25 @@
 import axios from "axios";
 
-const workoutsUrl = "http://localhost:4000/workouts";
+const API = axios.create({
+  baseURL: "http://localhost:4000",
+});
 
-export const signin = (formData) =>
-  axios.post("http://localhost:4000/user/signin", formData);
-export const signup = (formData) =>
-  axios.post("http://localhost:4000/user/signup", formData);
+// function that occurs on each request
+// happens before our requests below - sends token to backend so backend middleware can verify
+// that  we are logged in
+API.interceptors.request.use((req) => {
+  if (localStorage.getItem("profile")) {
+    // place token here that was grabbed in auth middleware
+    req.headers.Authorization = `Bearer ${
+      JSON.parse(localStorage.getItem("profile")).token
+    }`;
+  }
 
-export const fetchWorkouts = () => axios.get(workoutsUrl);
-export const createWorkout = (newWorkout) =>
-  axios.post(workoutsUrl, newWorkout);
+  return req;
+});
+
+export const signin = (formData) => API.post("/user/signin", formData);
+export const signup = (formData) => API.post("/user/signup", formData);
+
+export const fetchWorkouts = () => API.get("/workouts");
+export const createWorkout = (newWorkout) => API.post("/workouts", newWorkout);
