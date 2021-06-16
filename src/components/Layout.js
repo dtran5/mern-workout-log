@@ -47,6 +47,10 @@ const useStyles = makeStyles((theme) => {
     drawerPaper: {
       width: drawerWidth,
     },
+    drawerList: {
+      position: "relative",
+      height: "100%",
+    },
     root: {
       display: "flex",
     },
@@ -64,7 +68,8 @@ const useStyles = makeStyles((theme) => {
       marginLeft: theme.spacing(2),
     },
     logout: {
-      marginTop: "auto",
+      position: "absolute",
+      bottom: 0,
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -221,24 +226,27 @@ function Layout({ children }) {
           </IconButton>
         </div>
         <Divider />
-        <List>
-          {drawerItems.map((item) => (
-            <ListItem
-              className={`
+        <List className={classes.drawerList}>
+          <div>
+            {drawerItems.map((item) => (
+              <ListItem
+                className={`
                    ${location.pathname === item.path ? classes.active : null}`}
-              onClick={() => history.push(item.path)}
-              button
-              key={item.text}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+                onClick={() => history.push(item.path)}
+                button
+                key={item.text}
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            ))}
+          </div>
+          <div className={classes.logout}>
+            <ListItem button onClick={handleLogout}>
+              <ListItemIcon>{<ExitToAppIcon />}</ListItemIcon>
+              <ListItemText primary={"Logout"} />
             </ListItem>
-          ))}
-
-          <ListItem button onClick={handleLogout}>
-            <ListItemIcon>{<ExitToAppIcon />}</ListItemIcon>
-            <ListItemText primary={"Logout"} />
-          </ListItem>
+          </div>
         </List>
       </Drawer>
 

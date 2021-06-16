@@ -23,7 +23,9 @@ function Workouts() {
   // useSelector allows us to reach into global redux store
   // parameter in useSelector gives us access to entire store
   const workouts = useSelector((state) => state.workouts.workouts.workouts);
-
+  console.log(workouts);
+  const reduxState = useSelector((state) => state);
+  console.log(reduxState);
   return (
     <Container spacing={3}>
       <Grid container>
@@ -37,33 +39,6 @@ function Workouts() {
       </Grid>
     </Container>
   );
-
-  // return !workouts ? (
-  //   <>
-  //     <Container>
-  //       <Row className="text-center mt-3">
-  //         <Col>
-  //           <Spinner animation="border" variant="success" />
-  //           <Spinner animation="border" variant="danger" />
-  //           <Spinner animation="border" variant="warning" />
-  //           <Spinner animation="border" variant="info" />
-  //         </Col>
-  //       </Row>
-  //     </Container>
-  //   </>
-  // ) : (
-  //   <>
-  //     <Container className="workouts__container">
-  //       <Row>
-  //         {workouts.map((workout) => (
-  //           <Col md={6} lg={6}>
-  //             <RenderWorkout workout={workout} key={workout.id} />
-  //           </Col>
-  //         ))}
-  //       </Row>
-  //     </Container>
-  //   </>
-  // );
 }
 
 export default Workouts;

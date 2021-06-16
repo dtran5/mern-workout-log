@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { format } from "date-fns";
 // redux
 import { useDispatch } from "react-redux";
-import { createWorkout } from "../redux/workouts/workoutsActions";
+import { createWorkout } from "../../redux/workouts/workoutsActions";
 // styling
 import {
   Typography,

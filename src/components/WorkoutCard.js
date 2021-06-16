@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 //dependencies
 import { format, parseISO } from "date-fns";
+import { useHistory, Link } from "react-router-dom";
+// redux
+import { useDispatch, useSelector } from "react-redux";
+import { deleteWorkout } from "../redux/workouts/workoutsActions";
 // styles
 import {
   Card,
@@ -10,15 +14,18 @@ import {
   IconButton,
   Typography,
   makeStyles,
+  Menu,
+  MenuItem,
 } from "@material-ui/core";
 
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import QueryBuilderOutlinedIcon from "@material-ui/icons/QueryBuilderOutlined";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles({
   icon: {
-    fontSize: "0.9rem",
+    fontSize: "1rem",
     marginRight: "0.1rem",
   },
   actions: {
@@ -35,6 +42,8 @@ const useStyles = makeStyles({
   },
 });
 
+const ITEM_HEIGHT = 48;
+
 const WorkoutCard = ({
   workout: {
     trainingType,
@@ -48,7 +57,35 @@ const WorkoutCard = ({
     createdAt,
   },
 }) => {
+  const reduxState = useSelector((state) => state.workouts.workouts.workouts);
+  const dispatch = useDispatch();
+  const history = useHistory();
   const classes = useStyles();
+  const [anchorElement, setAnchorElement] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  const handleClick = (e) => {
+    setAnchorElement(e.currentTarget);
+    setOpen(true);
+  };
+
+  const handleDelete = (e) => {
+    console.log(id);
+    console.log(reduxState);
+    dispatch(deleteWorkout(id));
+  };
+
+  const toggleMenu = () => {
+    if (open === true) {
+      setOpen(false);
+    } else {
+      return;
+    }
+  };
+
+  const handleClose = (e) => {
+    setAnchorElement(null);
+  };
 
   let formatted;
   const formatDate = (createdAt) => {
@@ -59,15 +96,43 @@ const WorkoutCard = ({
   formatDate(createdAt);
 
   return (
-    <div>
+    <div onClick={toggleMenu}>
       <Card elevation={1}>
         <CardHeader
           action={
-            <IconButton>
-              <FavoriteBorderIcon color="secondary" />
-            </IconButton>
+            <>
+              <IconButton>
+                <FavoriteBorderIcon color="secondary" />
+              </IconButton>
+              <IconButton onClick={handleClick}>
+                <Menu
+                  id="long-menu"
+                  anchorEl={anchorElement}
+                  keepMounted
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      maxHeight: ITEM_HEIGHT * 4.5,
+                      width: "20ch",
+                    },
+                  }}
+                >
+                  <Link to={`/update/${id}`}>
+                    <MenuItem>Update</MenuItem>
+                  </Link>
+                  <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                </Menu>
+                <MoreVertIcon className={classes.icon} />
+              </IconButton>
+            </>
           }
           title={trainingType}
+          subheader={
+            trainingDuration >= 2
+              ? "for " + trainingDuration + " hours"
+              : "for " + trainingDuration + " hour"
+          }
         />
         <CardContent>
           <Typography
@@ -91,12 +156,7 @@ const WorkoutCard = ({
               className={classes.footerSize}
               color="textSecondary"
               variant="body2"
-            >
-              <QueryBuilderOutlinedIcon className={classes.icon} />
-              {trainingDuration >= 2
-                ? "Workout was " + trainingDuration + " hours in length."
-                : "Workout was " + trainingDuration + " hour in length"}
-            </Typography>
+            ></Typography>
             <Typography
               className={classes.footerSize}
               color="textSecondary"
