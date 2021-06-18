@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 // dependencies
 import { useParams } from "react-router-dom";
 // redux
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { getWorkouts } from "../redux/workouts/workoutsActions";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchWorkoutAsync } from "../redux/workouts/workoutsSlice";
 // components
 import CreateWorkouts from "./forms/CreateWorkouts";
 
 const EditWorkouts = () => {
+  const dispatch = useDispatch();
+  const [updateId, setUpdateId] = useState("");
   const [workout, setWorkout] = useState({
     firstName: "",
     lastName: "",
@@ -19,12 +21,30 @@ const EditWorkouts = () => {
     trainingType: "",
   });
 
-  // define dispatch that allows dispatching of actions
-  const dispatch = useDispatch();
+  // grabbing unique id of workout from url param
+  const paramId = useParams().workoutId;
 
+  // pulling workout state from redux store after we used dispatch to get it
+  const workoutToBeUpdated = useSelector(
+    (state) => state.workoutsSlice.workouts.workout
+  );
+  console.log(workoutToBeUpdated);
+
+  // dispatching action to grab individual workout and store in redux store
   useEffect(() => {
-    dispatch(getWorkouts());
-  }, [dispatch]);
+    if (paramId) {
+      setUpdateId(paramId);
+      dispatch(fetchWorkoutAsync(updateId));
+      setWorkout(workoutToBeUpdated);
+    }
+  }, [updateId, paramId, dispatch]);
+
+  // useEffect(
+  //   (updateId) => {
+
+  //   },
+  //   [dispatch]
+  // );
 
   // let { workoutId } = useParams();
 
@@ -122,7 +142,7 @@ const EditWorkouts = () => {
     //   </Form>
     // </>
     <>
-      <CreateWorkouts editWorkout={workout} />
+      <CreateWorkouts updateWorkout={workout} />
     </>
   );
 };

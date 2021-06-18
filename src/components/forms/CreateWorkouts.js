@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // dependencies
-import { useHistory } from "react-router-dom";
-import { format } from "date-fns";
+import { useHistory, useParams } from "react-router-dom";
+
 // redux
 import { useDispatch } from "react-redux";
-import { createWorkout } from "../../redux/workouts/workoutsActions";
+import {
+  createWorkoutAsync,
+  updateWorkoutAsync,
+} from "../../redux/workouts/workoutsSlice";
 // styling
 import {
   Typography,
@@ -98,273 +101,324 @@ const useStyles = makeStyles({
   },
 });
 
-const CreateWorkouts = () => {
-  const classes = useStyles();
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const user = JSON.parse(localStorage.getItem("profile"));
-  const [workout, setWorkout] = useState({
-    trainingType: "",
-    trainingDuration: "",
-    firstName: "",
-    lastName: "",
-    comments: "",
-    location: "",
-    rpe: 1,
-    createdAt: new Date(),
-  });
+const CreateWorkouts = () =>
+  // updateWorkout: {
+  //   trainingType,
+  //   trainingDuration,
+  //   comments,
+  //   location,
+  //   id,
+  //   rpe,
+  //   firstName,
+  //   lastName,
+  //   createdAt,
+  // },
+  {
+    const classes = useStyles();
+    const history = useHistory();
+    const dispatch = useDispatch();
 
-  const handleRPE = (e) => {
-    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem("profile"));
 
-    if (e.target.id === "one") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    } else if (e.target.id === "two") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    } else if (e.target.id === "three") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    } else if (e.target.id === "four") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    } else if (e.target.id === "five") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    } else if (e.target.id === "six") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    } else if (e.target.id === "seven") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    } else if (e.target.id === "eight") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    } else if (e.target.id === "nine") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    } else if (e.target.id === "ten") {
-      setWorkout({
-        ...workout,
-        rpe: parseInt(e.target.innerHTML),
-      });
-    }
-  };
+    const [workout, setWorkout] = useState({
+      trainingType: "",
+      trainingDuration: "",
+      firstName: "",
+      lastName: "",
+      comments: "",
+      location: "",
+      rpe: 1,
+      id: "",
+    });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    // useEffect(() => {
+    //   if (id) {
+    //     setWorkout({
+    //       trainingType: trainingType,
+    //       trainingDuration: trainingDuration,
+    //       firstName: firstName,
+    //       lastName: lastName,
+    //       comments: comments,
+    //       location: location,
+    //       rpe: rpe,
+    //       id: id,
+    //     });
+    //   }
+    // }, [
+    //   trainingType,
+    //   trainingDuration,
+    //   firstName,
+    //   lastName,
+    //   comments,
+    //   location,
+    //   rpe,
+    //   id,
+    // ]);
 
-    dispatch(createWorkout(workout));
-    history.push("/");
-  };
+    // console.log(
+    //   trainingType,
+    //   trainingDuration,
+    //   comments,
+    //   location,
+    //   id,
+    //   rpe,
+    //   firstName,
+    //   lastName
+    // );
 
-  return (
-    <>
-      <Container>
-        <Grid container direction="column">
-          <Grid zeroMinWidth xs={12} sm={12} md={6} item>
-            <Typography variant="h6" color="textSecondary">
-              Share Your Training
-            </Typography>
-          </Grid>
-          <Grid zeroMinWidth xs={12} sm={12} md={6} item>
-            <form onSubmit={handleSubmit}>
-              <Grid direction="column" container>
-                <Grid item>
-                  <TextField
-                    onChange={(e) =>
-                      setWorkout({
-                        ...workout,
-                        trainingType: e.target.value,
-                        firstName: user.result.firstName,
-                        lastName: user.result.lastName,
-                      })
-                    }
-                    size="small"
-                    value={workout.trainingType}
-                    className={classes.textField}
-                    variant="outlined"
-                    label="Training method (weights, running, swimming, etc)"
-                    color="secondary"
-                    fullWidth
-                    required
-                  />
-                  <TextField
-                    onChange={(e) =>
-                      setWorkout({
-                        ...workout,
-                        trainingDuration: e.target.value,
-                      })
-                    }
-                    value={workout.trainingDuration}
-                    className={classes.textField}
-                    variant="outlined"
-                    label="Training duration (hrs)"
-                    color="secondary"
-                    fullWidth
-                    required
-                  />
-                  <TextField
-                    onChange={(e) =>
-                      setWorkout({ ...workout, location: e.target.value })
-                    }
-                    value={workout.location}
-                    className={classes.textField}
-                    variant="outlined"
-                    label="Training location? Gym, park, home, etc."
-                    color="secondary"
-                    fullWidth
-                    required
-                  />
-                  <TextField
-                    onChange={(e) =>
-                      setWorkout({ ...workout, comments: e.target.value })
-                    }
-                    value={workout.comments}
-                    className={classes.textField}
-                    variant="outlined"
-                    label="Share your thoughts on how it went!"
-                    fullWidth
-                    required
-                    multiline
-                    rows={4}
-                  />
+    const handleRPE = (e) => {
+      e.preventDefault();
+      if (e.target.innerText === "1") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      } else if (e.target.innerText === "2") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      } else if (e.target.innerText === "3") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      } else if (e.target.innerText === "4") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      } else if (e.target.innerText === "5") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      } else if (e.target.innerText === "6") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      } else if (e.target.innerText === "7") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      } else if (e.target.innerText === "8") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      } else if (e.target.innerText === "9") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      } else if (e.target.innerText === "10") {
+        setWorkout({
+          ...workout,
+          rpe: parseInt(e.target.innerText),
+        });
+      }
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      // if (id) {
+      //   dispatch(updateWorkoutAsync(id, workout));
+      // } else {
+      dispatch(createWorkoutAsync(workout));
+      history.push("/");
+      // }
+    };
+
+    return (
+      <>
+        <Container>
+          <Grid container direction="column">
+            <Grid zeroMinWidth xs={12} sm={12} md={6} item>
+              <Typography variant="h6" color="textSecondary">
+                Share Your Training
+              </Typography>
+            </Grid>
+            <Grid zeroMinWidth xs={12} sm={12} md={6} item>
+              <form onSubmit={handleSubmit}>
+                <Grid direction="column" container>
+                  <Grid item>
+                    <TextField
+                      onChange={(e) =>
+                        setWorkout({
+                          ...workout,
+                          trainingType: e.target.value,
+                          firstName: user.result.firstName,
+                          lastName: user.result.lastName,
+                        })
+                      }
+                      size="small"
+                      value={workout.trainingType}
+                      className={classes.textField}
+                      variant="outlined"
+                      label="Training method (weights, running, swimming, etc)"
+                      color="secondary"
+                      fullWidth
+                      required
+                    />
+                    <TextField
+                      onChange={(e) =>
+                        setWorkout({
+                          ...workout,
+                          trainingDuration: e.target.value,
+                        })
+                      }
+                      value={workout.trainingDuration}
+                      className={classes.textField}
+                      variant="outlined"
+                      label="Training duration (hrs)"
+                      color="secondary"
+                      fullWidth
+                      required
+                    />
+                    <TextField
+                      onChange={(e) =>
+                        setWorkout({ ...workout, location: e.target.value })
+                      }
+                      value={workout.location}
+                      className={classes.textField}
+                      variant="outlined"
+                      label="Training location? Gym, park, home, etc."
+                      color="secondary"
+                      fullWidth
+                      required
+                    />
+                    <TextField
+                      onChange={(e) =>
+                        setWorkout({ ...workout, comments: e.target.value })
+                      }
+                      value={workout.comments}
+                      className={classes.textField}
+                      variant="outlined"
+                      label="Share your thoughts on how it went!"
+                      fullWidth
+                      required
+                      multiline
+                      rows={4}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h6" color="textSecondary">
+                      Difficulty
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <ButtonGroup variant="contained">
+                      <Button
+                        classes={{
+                          root: classes.btnOne,
+                        }}
+                        // className={classes.btnOne}
+                        startIcon={<MoodIcon />}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        1
+                      </Button>{" "}
+                      <Button
+                        classes={{
+                          root: classes.btnTwo,
+                        }}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        2
+                      </Button>{" "}
+                      <Button
+                        classes={{
+                          root: classes.btnThree,
+                        }}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        3
+                      </Button>{" "}
+                      <Button
+                        classes={{
+                          root: classes.btnFour,
+                        }}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        4
+                      </Button>
+                      <Button
+                        classes={{
+                          root: classes.btnFive,
+                        }}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        5
+                      </Button>
+                      <Button
+                        classes={{
+                          root: classes.btnSix,
+                        }}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        6
+                      </Button>
+                      <Button
+                        classes={{
+                          root: classes.btnSeven,
+                        }}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        7
+                      </Button>
+                      <Button
+                        classes={{
+                          root: classes.btnEight,
+                        }}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        8
+                      </Button>
+                      <Button
+                        classes={{
+                          root: classes.btnNine,
+                        }}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        9
+                      </Button>
+                      <Button
+                        classes={{
+                          root: classes.btnTen,
+                        }}
+                        startIcon={<SentimentVeryDissatisfiedOutlinedIcon />}
+                        onClick={handleRPE}
+                        value={workout.rpe}
+                      >
+                        10
+                      </Button>
+                    </ButtonGroup>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      className={classes.textField}
+                      color="secondary"
+                      type="submit"
+                      variant="contained"
+                    >
+                      Share!
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Typography variant="h6" color="textSecondary">
-                    Difficulty
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <ButtonGroup variant="contained">
-                    <Button
-                      classes={{
-                        root: classes.btnOne,
-                      }}
-                      // className={classes.btnOne}
-                      startIcon={<MoodIcon />}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      1
-                    </Button>{" "}
-                    <Button
-                      classes={{
-                        root: classes.btnTwo,
-                      }}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      2
-                    </Button>{" "}
-                    <Button
-                      classes={{
-                        root: classes.btnThree,
-                      }}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      3
-                    </Button>{" "}
-                    <Button
-                      classes={{
-                        root: classes.btnFour,
-                      }}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      4
-                    </Button>
-                    <Button
-                      classes={{
-                        root: classes.btnFive,
-                      }}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      5
-                    </Button>
-                    <Button
-                      classes={{
-                        root: classes.btnSix,
-                      }}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      6
-                    </Button>
-                    <Button
-                      classes={{
-                        root: classes.btnSeven,
-                      }}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      7
-                    </Button>
-                    <Button
-                      classes={{
-                        root: classes.btnEight,
-                      }}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      8
-                    </Button>
-                    <Button
-                      classes={{
-                        root: classes.btnNine,
-                      }}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      9
-                    </Button>
-                    <Button
-                      classes={{
-                        root: classes.btnTen,
-                      }}
-                      startIcon={<SentimentVeryDissatisfiedOutlinedIcon />}
-                      onClick={handleRPE}
-                      value={workout.rpe}
-                    >
-                      10
-                    </Button>
-                  </ButtonGroup>
-                </Grid>
-                <Grid item>
-                  <Button
-                    className={classes.textField}
-                    color="secondary"
-                    type="submit"
-                    variant="contained"
-                  >
-                    Share!
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
-          </Grid>
-          {/* <Form onSubmit={handleSubmit} className="Grid mt-5 mr-5">
+              </form>
+            </Grid>
+            {/* <Form onSubmit={handleSubmit} className="Grid mt-5 mr-5">
             <Button
               className="allbuttons mt-3"
               variant="primary"
@@ -374,10 +428,10 @@ const CreateWorkouts = () => {
               Submit
             </Button>
           </Form> */}
-        </Grid>
-      </Container>
-    </>
-  );
-};
+          </Grid>
+        </Container>
+      </>
+    );
+  };
 
 export default CreateWorkouts;

@@ -30,8 +30,6 @@ export const workoutsReducer = (state = initialState, action) => {
         workouts: action.payload,
       };
     case DELETE_WORKOUT:
-      console.log(action.payload);
-      console.log(state);
       return {
         ...state,
         workouts: state.workouts.workouts.workouts.filter(

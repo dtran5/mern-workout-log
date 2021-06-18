@@ -58,7 +58,6 @@ const createWorkout = async (req, res, next) => {
   const newWorkout = new Workout({
     ...workout,
     creator: req.userId,
-    createdAt: new Date().toISOString(),
   });
 
   try {

@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 //dependencies
 import { format, parseISO } from "date-fns";
 import { useHistory, Link } from "react-router-dom";
 // redux
-import { useDispatch, useSelector } from "react-redux";
-import { deleteWorkout } from "../redux/workouts/workoutsActions";
+import { useDispatch } from "react-redux";
+import {
+  deleteWorkoutAsync,
+  fetchWorkoutsAsync,
+} from "../redux/workouts/workoutsSlice";
 // styles
 import {
   Card,
@@ -57,22 +60,36 @@ const WorkoutCard = ({
     createdAt,
   },
 }) => {
-  const reduxState = useSelector((state) => state.workouts.workouts.workouts);
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
+  const [workout, setWorkout] = useState({
+    trainingType: trainingType,
+    trainingDuration: trainingDuration,
+    firstName: firstName,
+    lastName: lastName,
+    comments: comments,
+    location: location,
+    rpe: rpe,
+  });
   const [anchorElement, setAnchorElement] = useState(null);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchWorkoutsAsync());
+  }, [dispatch]);
 
   const handleClick = (e) => {
     setAnchorElement(e.currentTarget);
     setOpen(true);
   };
 
+  const handleUpdate = () => {
+    // console.log(workout);
+  };
+
   const handleDelete = (e) => {
-    console.log(id);
-    console.log(reduxState);
-    dispatch(deleteWorkout(id));
+    dispatch(deleteWorkoutAsync(id));
   };
 
   const toggleMenu = () => {
@@ -87,13 +104,13 @@ const WorkoutCard = ({
     setAnchorElement(null);
   };
 
-  let formatted;
-  const formatDate = (createdAt) => {
-    const parsed = parseISO(createdAt);
-    formatted = format(parsed, "M/d/Y h:maaa");
-  };
+  // let formatted;
+  // const formatDate = (createdAt) => {
+  //   const parsed = parseISO(createdAt);
+  //   formatted = format(parsed, "M/d/Y h:maaa");
+  // };
 
-  formatDate(createdAt);
+  // formatDate(createdAt);
 
   return (
     <div onClick={toggleMenu}>
@@ -119,7 +136,7 @@ const WorkoutCard = ({
                   }}
                 >
                   <Link to={`/update/${id}`}>
-                    <MenuItem>Update</MenuItem>
+                    <MenuItem onClick={handleUpdate}>Update</MenuItem>
                   </Link>
                   <MenuItem onClick={handleDelete}>Delete</MenuItem>
                 </Menu>
@@ -157,14 +174,14 @@ const WorkoutCard = ({
               color="textSecondary"
               variant="body2"
             ></Typography>
-            <Typography
+            {/* <Typography
               className={classes.footerSize}
               color="textSecondary"
               variant="body2"
             >
               <QueryBuilderOutlinedIcon className={classes.icon} />
               {"Date posted: " + formatted}
-            </Typography>
+            </Typography> */}
           </CardActions>
         </CardContent>
       </Card>
