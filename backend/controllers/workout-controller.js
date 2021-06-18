@@ -8,12 +8,8 @@ const getWorkouts = async (req, res, next) => {
   try {
     workouts = await Workout.find();
     res.status(200);
-  } catch (err) {
-    const error = new HttpError(
-      "Could not find workouts with this userId",
-      404
-    );
-    return next(error);
+  } catch (error) {
+    console.log(error);
   }
 
   if (!workouts || workouts.length === 0) {
@@ -62,14 +58,12 @@ const createWorkout = async (req, res, next) => {
   const newWorkout = new Workout({
     ...workout,
     creator: req.userId,
-    createdAt: new Date().toISOString(),
   });
 
   try {
     await newWorkout.save();
-  } catch (err) {
-    const error = new HttpError("Could not create workout", 500);
-    return next(error);
+  } catch (error) {
+    console.log(error);
   }
 
   res.status(201).json({ workout: newWorkout });
@@ -83,38 +77,53 @@ const updateWorkoutById = async (req, res, next) => {
     );
   }
 
-  const { trainingType, trainingDuration, comments, location, rpe } = req.body;
-  const workoutId = req.params.workoutId;
+  const { workoutId } = req.params;
+  console.log(workoutId);
+  const workout = req.body;
 
-  let workout;
-  try {
-    workout = await Workout.findById(workoutId);
-  } catch (err) {
-    const error = new HttpError(
-      "Something went wrong, could not update workout",
-      500
-    );
-    return next(error);
-  }
+  // check to see if id is a valid mongoose object
+  if (!mongoose.Types.ObjectId.isValid(workoutId))
+    return res.status(404).send(`No post with id: ${workoutId}`);
 
-  workout.trainingType = trainingType;
-  workout.trainingDuration = trainingDuration;
-  workout.comments = comments;
-  workout.location = location;
-  workout.rpe = rpe;
+  const updatedWorkout = await Workout.findByIdAndUpdate(
+    workoutId,
+    { ...workout, workoutId },
+    {
+      new: true,
+    }
+  );
 
-  //need to make sure the updated info is saved again in our db
-  try {
-    await workout.save();
-  } catch (err) {
-    const error = new HttpError(
-      "Something went wrong, could not update workout",
-      500
-    );
-    return next(error);
-  }
+  res.json(updatedWorkout);
 
-  res.status(200).json({ workout: workout.toObject({ getters: true }) });
+  // let workout;
+  // try {
+  //   workout = await Workout.findById(workoutId);
+  // } catch (err) {
+  //   const error = new HttpError(
+  //     "Something went wrong, could not update workout",
+  //     500
+  //   );
+  //   return next(error);
+  // }
+
+  // workout.trainingType = trainingType;
+  // workout.trainingDuration = trainingDuration;
+  // workout.comments = comments;
+  // workout.location = location;
+  // workout.rpe = rpe;
+
+  // //need to make sure the updated info is saved again in our db
+  // try {
+  //   await workout.save();
+  // } catch (err) {
+  //   const error = new HttpError(
+  //     "Something went wrong, could not update workout",
+  //     500
+  //   );
+  //   return next(error);
+  // }
+
+  // res.status(200).json({ workout: workout.toObject({ getters: true }) });
 
   //make a copy of the workout object and then update that
 };
@@ -123,31 +132,39 @@ const deleteWorkoutById = async (req, res, next) => {
   const workoutId = req.params.workoutId;
   //return true and keep the workout and if they ids do match then it returns false and we drop the workout from the newly return array which in turn overwrites the old array
 
-  //check to make sure we have a place before we delete it
-  let workout;
-  try {
-    //populate allows us to refer to a document stored in another collection and to work with data in that existing document - need a relation between these 2 documents - this was established in our user.js file with ref: Workout and in workout.js with ref: User
-    //populate needs the specific document we are changing and a specific property which is creator for us because it contains the userId
-    workout = await Workout.findById(workoutId);
-  } catch (err) {
-    const error = new HttpError("Could not delete this workout by Id", 500);
-    return next(error);
-  }
+  // check to see if id is a valid mongoose object
+  if (!mongoose.Types.ObjectId.isValid(workoutId))
+    return res.status(404).send(`No post with id: ${workoutId}`);
 
-  //need to check whether a workout actually exists before we can delete it
-  if (!workout) {
-    const error = new HttpError("Could not find workout for this id", 404);
-    return next(error);
-  }
+  await Workout.findByIdAndRemove(workoutId);
 
-  try {
-    await workout.remove();
-  } catch (err) {
-    const error = new HttpError("Could not delete workout", 500);
-    return next(error);
-  }
+  console.log("DELETE");
 
-  res.status(200).json({ message: "Workout deleted" });
+  res.json({ message: "Workout deleted successfully" });
+
+  // //check to make sure we have a place before we delete it
+  // let workout;
+  // try {
+  //   //populate allows us to refer to a document stored in another collection and to work with data in that existing document - need a relation between these 2 documents - this was established in our user.js file with ref: Workout and in workout.js with ref: User
+  //   //populate needs the specific document we are changing and a specific property which is creator for us because it contains the userId
+  //   workout = await Workout.findById(workoutId);
+  // } catch (err) {
+  //   const error = new HttpError("Could not delete this workout by Id", 500);
+  //   return next(error);
+  // }
+
+  // //need to check whether a workout actually exists before we can delete it
+  // if (!workout) {
+  //   const error = new HttpError("Could not find workout for this id", 404);
+  //   return next(error);
+  // }
+
+  // try {
+  //   await workout.remove();
+  // } catch (err) {
+  //   const error = new HttpError("Could not delete workout", 500);
+  //   return next(error);
+  // }
 };
 
 exports.getWorkouts = getWorkouts;

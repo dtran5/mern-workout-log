@@ -6,7 +6,7 @@ const API = axios.create({
 
 // function that occurs on each request
 // happens before our requests below - sends token to backend so backend middleware can verify
-// that  we are logged in
+// that we are logged in
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("profile")) {
     // place token here that was grabbed in auth middleware
@@ -21,5 +21,9 @@ API.interceptors.request.use((req) => {
 export const signin = (formData) => API.post("/user/signin", formData);
 export const signup = (formData) => API.post("/user/signup", formData);
 
+export const fetchWorkout = (workoutId) => API.get(`/workouts/${workoutId}`);
 export const fetchWorkouts = () => API.get("/workouts");
 export const createWorkout = (newWorkout) => API.post("/workouts", newWorkout);
+export const updateWorkout = (workoutId, updatedWorkout) =>
+  API.patch(`/workouts/update/${workoutId}`, updatedWorkout);
+export const deleteWorkout = (id) => API.delete(`workouts/${id}`);

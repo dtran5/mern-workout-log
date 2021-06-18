@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 // dependencies
 import { useHistory } from "react-router-dom";
-import { format } from "date-fns";
 // redux
-import { useDispatch } from "react-redux";
-import { createWorkout } from "../redux/workouts/workoutsActions";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createWorkout,
+  updateWorkout,
+} from "../redux/workouts/workoutsActions";
 // styling
 import {
   Typography,
@@ -98,10 +100,13 @@ const useStyles = makeStyles({
   },
 });
 
-const CreateWorkouts = () => {
+const CreateWorkouts = ({ workoutId, setWorkoutId }) => {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
+  // const workoutToBeUpdated = useSelector((state) =>
+  //   workoutId ? state.workouts.find((w) => w._id === workoutId) : null
+  // );
   const user = JSON.parse(localStorage.getItem("profile"));
   const [workout, setWorkout] = useState({
     trainingType: "",
@@ -173,7 +178,12 @@ const CreateWorkouts = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    dispatch(createWorkout(workout));
+    if (workoutId) {
+      dispatch(updateWorkout(workoutId, workout));
+    } else {
+      dispatch(createWorkout(workout));
+    }
+
     history.push("/");
   };
 
@@ -183,7 +193,7 @@ const CreateWorkouts = () => {
         <Grid container direction="column">
           <Grid zeroMinWidth xs={12} sm={12} md={6} item>
             <Typography variant="h6" color="textSecondary">
-              Share Your Training
+              Edit Workout of the Day
             </Typography>
           </Grid>
           <Grid zeroMinWidth xs={12} sm={12} md={6} item>
@@ -358,7 +368,7 @@ const CreateWorkouts = () => {
                     type="submit"
                     variant="contained"
                   >
-                    Share!
+                    Update!
                   </Button>
                 </Grid>
               </Grid>

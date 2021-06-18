@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 // react-router
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // components
 import Signup from "./components/forms/Signup";
-import Navigation from "./components/navigation/Navigation";
+
 import Workouts from "./components/Workouts";
 import EditWorkouts from "./components/EditWorkouts";
-import CreateWorkouts from "./components/CreateWorkouts";
+import CreateWorkouts from "./components/forms/CreateWorkouts";
 // styles
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import "./styles/App.scss";
-import { purple } from "@material-ui/core/colors";
+
 import Layout from "./components/Layout";
 
 const theme = createMuiTheme({
